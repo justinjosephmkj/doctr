@@ -38,19 +38,5 @@ def read_pdf(
         the list of pages decoded as numpy ndarray of shape H x W x C
     """
     # Rasterise pages to numpy ndarrays with pypdfium2
-    
-    # Initialize an empty list to store rendered pages
-    rendered_pages = []
-
-    # Create a PdfDocument object
-    pdf = pdfium.PdfDocument(file, password=password)
-
-    # Render pages to numpy ndarrays
-    for page in pdf:
-        rendered_page = page.render(scale=scale, rev_byteorder=rgb_mode, **kwargs).to_numpy()
-        rendered_pages.append(rendered_page)
-
-    # Close the PdfDocument object
-    pdf.close()
-
-    return rendered_pages
+    pdf = pdfium.PdfDocument(file, password=password, autoclose=True)
+    return [page.render(scale=scale, rev_byteorder=rgb_mode, **kwargs).to_numpy() for page in pdf]
